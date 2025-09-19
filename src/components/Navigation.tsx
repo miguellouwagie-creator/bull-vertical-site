@@ -19,15 +19,22 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <img 
-              src={bullLogo} 
-              alt="BULL Vertical Services LLC" 
-              className="h-10 w-10 object-contain"
-            />
-            <span className="text-lg font-bold text-foreground">
-              BULL Vertical Services LLC
-            </span>
+          <div className="flex items-center space-x-4">
+            <div className="flex-shrink-0">
+              <img 
+                src={bullLogo} 
+                alt="BULL Vertical Services LLC" 
+                className="h-14 w-14 object-contain rounded-lg shadow-md bg-white/10 p-1"
+              />
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-xl font-bold text-foreground leading-tight">
+                BULL Vertical Services
+              </span>
+              <div className="text-sm text-muted-foreground">
+                LLC
+              </div>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
