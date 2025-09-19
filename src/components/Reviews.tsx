@@ -6,7 +6,6 @@ interface Review {
   id: number;
   name: string;
   role: string;
-  building: string;
   rating: number;
   comment: string;
 }
@@ -17,7 +16,6 @@ export const Reviews = () => {
       id: 1,
       name: "María González",
       role: "Property Manager",
-      building: "Brickell Heights",
       rating: 5,
       comment: "Exceptional service. The BULL team is professional, punctual, and leaves our windows perfect. Safety is their priority and it shows in every job."
     },
@@ -25,7 +23,6 @@ export const Reviews = () => {
       id: 2,
       name: "Carlos Rodriguez",
       role: "Facilities Director", 
-      building: "One Thousand Museum",
       rating: 5,
       comment: "We've been working with BULL for 3 years. Their rope access technique is impressive and the results speak for themselves. Highly recommended."
     },
@@ -33,7 +30,6 @@ export const Reviews = () => {
       id: 3,
       name: "Ana Martinez",
       role: "HOA President",
-      building: "Paramount Miami",
       rating: 5,
       comment: "BULL completely transformed our building's appearance. First-class professionals with an incredible focus on details and safety."
     },
@@ -41,7 +37,6 @@ export const Reviews = () => {
       id: 4,
       name: "Roberto Silva",
       role: "Building Manager",
-      building: "Brickell City Centre",
       rating: 5,
       comment: "The best window cleaning service in Miami. The BULL team is reliable, efficient, and always meets deadlines. Excellent value for money."
     }
@@ -82,7 +77,6 @@ export const Reviews = () => {
                   <div>
                     <h4 className="font-semibold text-foreground">{review.name}</h4>
                     <p className="text-sm text-muted-foreground">{review.role}</p>
-                    <p className="text-sm text-primary font-medium">{review.building}</p>
                   </div>
                   {renderStars(review.rating)}
                 </div>
