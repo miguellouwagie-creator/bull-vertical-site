@@ -8,23 +8,29 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* BULL Brand Colors */
+    --bull-charcoal: 221 20% 7%;     /* #111317 - backgrounds/headers */
+    --bull-teal: 189 48% 31%;        /* #2A6F77 - accents/CTAs */
+    --bull-off-white: 216 29% 97%;   /* #F5F7FA - section backgrounds */
+    --bull-gray: 220 14% 46%;        /* #6B7280 - body text */
+
+    --background: var(--bull-off-white);
+    --foreground: var(--bull-charcoal);
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: var(--bull-charcoal);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: var(--bull-charcoal);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: var(--bull-teal);
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: var(--bull-off-white);
+    --secondary-foreground: var(--bull-charcoal);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: var(--bull-off-white);
+    --muted-foreground: var(--bull-gray);
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
