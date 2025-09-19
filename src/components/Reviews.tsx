@@ -19,7 +19,7 @@ export const Reviews = () => {
       role: "Property Manager",
       building: "Brickell Heights",
       rating: 5,
-      comment: "Servicio excepcional. El equipo de BULL es profesional, puntual y deja nuestras ventanas perfectas. La seguridad es su prioridad y se nota en cada trabajo."
+      comment: "Exceptional service. The BULL team is professional, punctual, and leaves our windows perfect. Safety is their priority and it shows in every job."
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ export const Reviews = () => {
       role: "Facilities Director", 
       building: "One Thousand Museum",
       rating: 5,
-      comment: "Llevamos 3 años trabajando con BULL. Su técnica de acceso por cuerdas es impresionante y los resultados hablan por sí solos. Altamente recomendado."
+      comment: "We've been working with BULL for 3 years. Their rope access technique is impressive and the results speak for themselves. Highly recommended."
     },
     {
       id: 3,
@@ -35,7 +35,7 @@ export const Reviews = () => {
       role: "HOA President",
       building: "Paramount Miami",
       rating: 5,
-      comment: "BULL transformó completamente la apariencia de nuestro edificio. Profesionales de primera clase con un enfoque increíble en los detalles y la seguridad."
+      comment: "BULL completely transformed our building's appearance. First-class professionals with an incredible focus on details and safety."
     },
     {
       id: 4,
@@ -43,7 +43,7 @@ export const Reviews = () => {
       role: "Building Manager",
       building: "Brickell City Centre",
       rating: 5,
-      comment: "El mejor servicio de limpieza de ventanas en Miami. El equipo de BULL es confiable, eficiente y siempre cumple con los plazos. Excelente relación calidad-precio."
+      comment: "The best window cleaning service in Miami. The BULL team is reliable, efficient, and always meets deadlines. Excellent value for money."
     }
   ];
 
@@ -67,10 +67,10 @@ export const Reviews = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Lo que dicen nuestros clientes
+            What Our Clients Say
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Más de 600 edificios confían en nosotros para mantener sus ventanas impecables
+            Over 600 buildings trust us to keep their windows spotless
           </p>
         </div>
 
@@ -99,17 +99,17 @@ export const Reviews = () => {
           <div className="inline-flex items-center space-x-4 bg-muted p-6 rounded-lg">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">600+</div>
-              <div className="text-sm text-muted-foreground">Edificios</div>
+              <div className="text-sm text-muted-foreground">Buildings</div>
             </div>
             <div className="h-12 w-px bg-border"></div>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">10+</div>
-              <div className="text-sm text-muted-foreground">Años</div>
+              <div className="text-sm text-muted-foreground">Years</div>
             </div>
             <div className="h-12 w-px bg-border"></div>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">5★</div>
-              <div className="text-sm text-muted-foreground">Calificación</div>
+              <div className="text-sm text-muted-foreground">Rating</div>
             </div>
           </div>
         </div>

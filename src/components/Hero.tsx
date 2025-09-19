@@ -33,7 +33,7 @@ export const Hero = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="text-lg px-8 py-4" asChild>
-            <a href="#contact">Contáctanos</a>
+            <a href="#contact">Contact Us</a>
           </Button>
           <Button 
             size="lg" 
@@ -41,7 +41,7 @@ export const Hero = () => {
             className="text-lg px-8 py-4 text-white border-white/30 bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm" 
             asChild
           >
-            <a href="#contact">Visita Técnica</a>
+            <a href="#contact">Technical Visit</a>
           </Button>
         </div>
       </div>
