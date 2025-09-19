@@ -32,10 +32,10 @@ export const Contact = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Contact Us
+            Contáctanos
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Ready to schedule your window cleaning service? Get in touch with us today.
+            ¿Listo para programar tu servicio de limpieza de ventanas? Ponte en contacto con nosotros hoy mismo.
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export const Contact = () => {
                   Contact Information
                 </CardTitle>
                 <CardDescription>
-                  Reach out to us for quotes and consultations
+                  Contáctanos para cotizaciones y consultas
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -80,18 +80,18 @@ export const Contact = () => {
                 
                 <div className="pt-4 border-t border-border">
                   <p className="text-sm text-muted-foreground mb-4">
-                    COI, W-9, vendor onboarding ready.
+                    COI, W-9, incorporación de proveedores lista.
                   </p>
                   
                   <Button asChild className="w-full">
                     <a 
-                      href="https://wa.me/34603428966?text=Hi%20BULL,%20I'd%20like%20a%20quote%20for%20[Building]%20in%20Miami."
+                      href="https://wa.me/34603428966?text=Hola%20BULL,%20me%20gustaría%20una%20cotización%20para%20[Edificio]%20en%20Miami."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      Chat on WhatsApp
+                      Chatear por WhatsApp
                     </a>
                   </Button>
                 </div>
@@ -102,15 +102,15 @@ export const Contact = () => {
           {/* Contact Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Get a Quote</CardTitle>
+              <CardTitle>Solicita una Cotización</CardTitle>
               <CardDescription>
-                Fill out the form below and we'll get back to you within 24 hours
+                Completa el formulario a continuación y te responderemos en 24 horas
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
-                  placeholder="Full name"
+                  placeholder="Nombre completo"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   required
@@ -118,7 +118,7 @@ export const Contact = () => {
                 
                 <Input
                   type="email"
-                  placeholder="Email"
+                  placeholder="Correo electrónico"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   required
@@ -126,40 +126,40 @@ export const Contact = () => {
                 
                 <Input
                   type="tel"
-                  placeholder="Phone"
+                  placeholder="Teléfono"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   required
                 />
                 
                 <Input
-                  placeholder="Building & address"
+                  placeholder="Edificio y dirección"
                   value={formData.building}
                   onChange={(e) => handleInputChange('building', e.target.value)}
                   required
                 />
                 
                 <Input
-                  placeholder="Stories / last clean date"
+                  placeholder="Pisos / fecha última limpieza"
                   value={formData.stories}
                   onChange={(e) => handleInputChange('stories', e.target.value)}
                 />
                 
                 <Select onValueChange={(value) => handleInputChange('scope', value)} required>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select scope" />
+                    <SelectValue placeholder="Selecciona el servicio" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="exterior">Exterior</SelectItem>
                     <SelectItem value="interior">Interior</SelectItem>
-                    <SelectItem value="post-construction">Post-construction</SelectItem>
-                    <SelectItem value="hard-water-removal">Hard-water removal</SelectItem>
-                    <SelectItem value="pressure-washing">Pressure washing</SelectItem>
+                    <SelectItem value="post-construction">Post-construcción</SelectItem>
+                    <SelectItem value="hard-water-removal">Remoción agua dura</SelectItem>
+                    <SelectItem value="pressure-washing">Lavado a presión</SelectItem>
                   </SelectContent>
                 </Select>
                 
                 <Textarea
-                  placeholder="Notes / preferred schedule"
+                  placeholder="Notas / horario preferido"
                   value={formData.notes}
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   rows={4}
@@ -175,7 +175,7 @@ export const Contact = () => {
                 />
                 
                 <Button type="submit" className="w-full">
-                  Get a Quote
+                  Solicitar Cotización
                 </Button>
               </form>
             </CardContent>

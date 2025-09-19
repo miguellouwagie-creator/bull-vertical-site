@@ -20,18 +20,18 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 bg-gradient-to-br from-primary to-primary/80 p-2 rounded-xl shadow-lg">
               <img 
                 src={bullLogo} 
                 alt="BULL Vertical Services LLC" 
-                className="h-14 w-14 object-contain rounded-lg shadow-md bg-white/10 p-1"
+                className="h-12 w-12 object-contain rounded-lg"
               />
             </div>
             <div className="hidden sm:block">
-              <span className="text-xl font-bold text-foreground leading-tight">
+              <span className="text-xl font-bold text-foreground leading-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 BULL Vertical Services
               </span>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground font-medium">
                 LLC
               </div>
             </div>
@@ -49,7 +49,7 @@ export const Navigation = () => {
               </a>
             ))}
             <Button asChild>
-              <a href="#contact">Get a Quote</a>
+              <a href="#contact">Contáctanos</a>
             </Button>
           </div>
 
@@ -80,7 +80,7 @@ export const Navigation = () => {
             <div className="pt-2">
               <Button asChild className="w-full">
                 <a href="#contact" onClick={() => setIsOpen(false)}>
-                  Get a Quote
+                  Contáctanos
                 </a>
               </Button>
             </div>

@@ -18,9 +18,13 @@ export const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-5xl">
-        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent drop-shadow-lg">
-          Miami's Premier
-          <span className="block text-primary">Window Cleaning</span>
+        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+          <span className="bg-gradient-to-r from-white via-blue-100 to-primary bg-clip-text text-transparent drop-shadow-2xl">
+            Miami's Premier
+          </span>
+          <span className="block bg-gradient-to-r from-primary via-teal-300 to-white bg-clip-text text-transparent drop-shadow-2xl mt-2">
+            Window Cleaning
+          </span>
         </h1>
         
         <p className="text-xl md:text-2xl mb-10 text-white/90 font-medium max-w-3xl mx-auto">
@@ -29,7 +33,7 @@ export const Hero = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="text-lg px-8 py-4" asChild>
-            <a href="#contact">Get a Quote</a>
+            <a href="#contact">Contáctanos</a>
           </Button>
           <Button 
             size="lg" 
@@ -37,7 +41,7 @@ export const Hero = () => {
             className="text-lg px-8 py-4 text-white border-white/30 bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm" 
             asChild
           >
-            <a href="#contact">Site Walk</a>
+            <a href="#contact">Visita Técnica</a>
           </Button>
         </div>
       </div>

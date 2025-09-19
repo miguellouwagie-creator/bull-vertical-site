@@ -143,7 +143,7 @@ export const Services = () => {
                 })}
               </div>
               <Button asChild>
-                <a href="#contact">Get Quote for Selected Services</a>
+                <a href="#contact">Cotización para Servicios Seleccionados</a>
               </Button>
             </div>
           </div>
