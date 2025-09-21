@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
-import bullLogo from '@/assets/bull-logo.jpg';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import bullLogo from "@/assets/bull-logo.jpg";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: '#services', label: 'Services' },
-    { href: '#safety', label: 'Safety' },
-    { href: '#process', label: 'Process' },
-    { href: '#faq', label: 'FAQ' },
-    { href: '#contact', label: 'Contact' },
+    { href: "#services", label: "Services" },
+    { href: "#safety", label: "Safety" },
+    { href: "#process", label: "Process" },
+    { href: "#faq", label: "FAQ" },
+    { href: "#contact", label: "Contact" },
   ];
 
   return (
@@ -20,11 +20,11 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0 bg-gradient-to-br from-primary to-primary/80 p-2 rounded-xl shadow-lg">
-              <img 
-                src={bullLogo} 
-                alt="BULL Vertical Services LLC" 
-                className="h-12 w-12 object-contain rounded-lg"
+            <div className="flex-shrink-0">
+              <img
+                src={bullLogo}
+                alt="BULL Vertical Services LLC"
+                className="h-12 w-12 object-contain"
               />
             </div>
             <div className="hidden sm:block">
@@ -49,7 +49,7 @@ export const Navigation = () => {
               </a>
             ))}
             <Button asChild>
-              <a href="#contact">Contáctanos</a>
+              <a href="#contact">Contact Us</a>
             </Button>
           </div>
 
@@ -80,7 +80,7 @@ export const Navigation = () => {
             <div className="pt-2">
               <Button asChild className="w-full">
                 <a href="#contact" onClick={() => setIsOpen(false)}>
-                  Contáctanos
+                  Contact Us
                 </a>
               </Button>
             </div>

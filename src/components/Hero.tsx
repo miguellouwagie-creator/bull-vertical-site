@@ -1,12 +1,12 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/miami-buildings.jpg';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/miami-buildings.jpg";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-visible">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${heroImage})`,
@@ -18,15 +18,15 @@ export const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-5xl">
-        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-[1.3] pb-3 overflow-visible">
           <span className="bg-gradient-to-r from-white via-blue-100 to-primary bg-clip-text text-transparent drop-shadow-2xl">
             Miami's Premier
           </span>
-          <span className="block bg-gradient-to-r from-primary via-teal-300 to-white bg-clip-text text-transparent drop-shadow-2xl mt-2">
+          <span className="inline-block align-text-bottom bg-gradient-to-r from-primary via-teal-300 to-white bg-clip-text text-transparent drop-shadow-2xl mt-2 pb-[0.2em]">
             Window Cleaning
           </span>
         </h1>
-        
+
         <p className="text-xl md:text-2xl mb-10 text-white/90 font-medium max-w-3xl mx-auto">
           Rope-access specialists • 600+ buildings • OSHA-aligned safety
         </p>
@@ -35,10 +35,10 @@ export const Hero = () => {
           <Button size="lg" className="text-lg px-8 py-4" asChild>
             <a href="#contact">Contact Us</a>
           </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="text-lg px-8 py-4 text-white border-white/30 bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm" 
+          <Button
+            size="lg"
+            variant="outline"
+            className="text-lg px-8 py-4 text-white border-white/30 bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm"
             asChild
           >
             <a href="#contact">Technical Visit</a>
@@ -48,8 +48,18 @@ export const Hero = () => {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+          />
         </svg>
       </div>
     </section>
