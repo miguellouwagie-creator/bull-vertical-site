@@ -1,12 +1,14 @@
-import React from 'react';
-import { Navigation } from '@/components/Navigation';
-import { Hero } from '@/components/Hero';
-import { TrustLogos } from '@/components/TrustLogos';
-import { About } from '@/components/About';
-import { Services } from '@/components/Services';
-import { Reviews } from '@/components/Reviews';
-import { Contact } from '@/components/Contact';
-import { Footer } from '@/components/Footer';
+import React from "react";
+import { Navigation } from "@/components/Navigation";
+import { Hero } from "@/components/Hero";
+import { TrustLogos } from "@/components/TrustLogos";
+import { About } from "@/components/About";
+import { Services } from "@/components/Services";
+import { WorkGallery } from "@/sections/WorkGallery";
+import { Reviews } from "@/components/Reviews";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
+import { FAQSection } from "@/sections/FAQSection";
 
 const Index = () => {
   return (
@@ -16,7 +18,9 @@ const Index = () => {
       <TrustLogos />
       <About />
       <Services />
+      <WorkGallery />
       <Reviews />
+      <FAQSection />
       <Contact />
       <Footer />
     </div>

@@ -1,0 +1,41 @@
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://bullverticalservice.com/#localbusiness",
+  "url": "https://bullverticalservice.com/",
+  "name": "BULL Vertical Services",
+  "description": "IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured.",
+  "image": "https://bullverticalservice.com/og/social-card.png",
+  "telephone": "+1-786-613-0866",
+  "email": "bullverticalservice@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "515 N.W. 59th Ave., Ste. 519",
+    "addressLocality": "Miami",
+    "addressRegion": "FL",
+    "postalCode": "33126",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Miami" },
+    { "@type": "AdministrativeArea", "name": "Miami-Dade County" },
+    { "@type": "State", "name": "Florida" }
+  ],
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 25.777,
+    "longitude": -80.29
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+1-786-613-0866",
+      "email": "bullverticalservice@gmail.com",
+      "availableLanguage": ["en", "es"],
+      "areaServed": "US-FL"
+    }
+  ],
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=515%20N.W.%2059th%20Ave.%2C%20Ste.%20519%2C%20Miami%2C%20FL%2033126",
+  "sameAs": []
+}

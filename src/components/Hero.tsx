@@ -1,66 +1,113 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/miami-buildings.jpg";
+import { useLang } from "@/i18n/LanguageContext";
 
 export const Hero = () => {
+  const { t, lang } = useLang() as { t: (k: string) => string; lang?: string };
+
+  // Si i18n devuelve la clave (no existe la traducción), usamos fallback por idioma
+  const isMissing = (res: string, key: string) =>
+    !res ||
+    res === key ||
+    res.trim().toLowerCase() === key.trim().toLowerCase() ||
+    /^[a-z0-9_]+\.[a-z0-9_.-]+$/i.test(res);
+
+  const tr = (key: string, enFallback: string, esFallback: string) => {
+    const useES = (lang || "").toLowerCase().startsWith("es");
+    const fb = useES ? esFallback : enFallback;
+    try {
+      const res = t ? t(key) : "";
+      return isMissing(res, key) ? fb : res;
+    } catch {
+      return fb;
+    }
+  };
+
+  // Texto corto con fallback por idioma
+  const title = tr(
+    "hero_short.title",
+    "Crystal-clear towers.\nZero hassle.",
+    "Rascacielos impecables.\nCero complicaciones.",
+  );
+  const chipsStr = tr(
+    "hero_short.chips",
+    "24–48h scheduling • IRATA-certified • Fully insured",
+    "Planificación 24–48 h • Certificación IRATA • Asegurados",
+  );
+  const cta1 = tr("hero.cta", "Get a quote", "Solicitar presupuesto");
+  const cta2 = tr("hero.cta2", "Technical visit", "Visita técnica");
+
+  const chips = chipsStr.split("•").map((s) => s.trim());
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-visible">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-        }}
-      >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+    // Altura = alto de pantalla - navbar (4rem = h-16). Cambia 4rem si tu navbar mide otra cosa.
+    <section className="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden">
+      {/* Fondo: imagen visible y nítida (WebP optimizado desde /public/hero) */}
+      <img
+        src="/hero/cover.webp"
+        srcSet="/hero/cover-768.webp 768w, /hero/cover-1280.webp 1280w, /hero/cover-1920.webp 1920w"
+        sizes="100vw"
+        alt="Rope-access window cleaning on Miami high-rises"
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+        style={{ objectPosition: "70% 50%" }}
+        loading="eager"
+        decoding="async"
+      />
+
+      {/* Overlay MUY sutil: un foco radial detrás del texto + pequeños fades */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        {/* Spotlight: ajusta los números para más/menos oscuridad */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(110% 80% at 22% 45%, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.20) 36%, rgba(0,0,0,0.08) 58%, rgba(0,0,0,0) 75%)",
+          }}
+        />
+        {/* Sombras muy suaves arriba/abajo para que el texto siempre se lea */}
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-5xl">
-        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-[1.3] pb-3 overflow-visible">
-          <span className="bg-gradient-to-r from-white via-blue-100 to-primary bg-clip-text text-transparent drop-shadow-2xl">
-            Miami's Premier
-          </span>
-          <span className="inline-block align-text-bottom bg-gradient-to-r from-primary via-teal-300 to-white bg-clip-text text-transparent drop-shadow-2xl mt-2 pb-[0.2em]">
-            Window Cleaning
-          </span>
-        </h1>
+      {/* Contenido */}
+      <div className="container mx-auto px-4 w-full">
+        <div className="max-w-3xl text-left text-white">
+          {/* Título: dos líneas fuertes, sin efectos raros */}
+          <h1 className="whitespace-pre-line text-4xl md:text-6xl font-extrabold leading-tight drop-shadow">
+            {title}
+          </h1>
 
-        <p className="text-xl md:text-2xl mb-10 text-white/90 font-medium max-w-3xl mx-auto">
-          Rope-access specialists • 600+ buildings • OSHA-aligned safety
-        </p>
+          {/* Chips: beneficios rápidos (mejor que un párrafo largo) */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {chips.map((c, i) => (
+              <span
+                key={i}
+                className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold text-white"
+              >
+                {c}
+              </span>
+            ))}
+          </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="text-lg px-8 py-4" asChild>
-            <a href="#contact">Contact Us</a>
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="text-lg px-8 py-4 text-white border-white/30 bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm"
-            asChild
-          >
-            <a href="#contact">Technical Visit</a>
-          </Button>
+          {/* CTAs */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <Button
+              size="lg"
+              className="h-11 px-6 text-sm font-semibold shadow-sm"
+              asChild
+            >
+              <a href="#contact">{cta1}</a>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-11 px-6 text-sm font-semibold text-white border-white/40 bg-white/10 hover:bg-white hover:text-primary"
+              asChild
+            >
+              <a href="#contact">{cta2}</a>
+            </Button>
+          </div>
         </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
       </div>
     </section>
   );

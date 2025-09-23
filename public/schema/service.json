@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://bullverticalservice.com/#service",
+  "serviceType": "Rope-access window & facade cleaning",
+  "provider": { "@id": "https://bullverticalservice.com/#localbusiness" },
+  "areaServed": { "@type": "City", "name": "Miami" },
+  "availableChannel": [
+    {
+      "@type": "ServiceChannel",
+      "serviceUrl": "https://bullverticalservice.com/#contact",
+      "name": "Online quote form"
+    },
+    {
+      "@type": "ServiceChannel",
+      "servicePhone": {
+        "@type": "ContactPoint",
+        "telephone": "+1-786-613-0866"
+      },
+      "name": "Phone"
+    },
+    {
+      "@type": "ServiceChannel",
+      "serviceUrl": "https://wa.me/34603428966",
+      "name": "WhatsApp"
+    }
+  ],
+  "termsOfService": "https://bullverticalservice.com/",
+  "isRelatedTo": { "@id": "https://bullverticalservice.com/#website" }
+}

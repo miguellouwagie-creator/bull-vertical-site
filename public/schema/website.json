@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://bullverticalservice.com/#website",
+  "url": "https://bullverticalservice.com/",
+  "name": "BULL Vertical Services",
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Organization",
+    "name": "BULL Vertical Services",
+    "url": "https://bullverticalservice.com/"
+  },
+  "potentialAction": {
+    "@type": "ContactAction",
+    "target": "https://bullverticalservice.com/#contact",
+    "name": "Request a Quote"
+  }
+}

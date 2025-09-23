@@ -2,25 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
+   All colors MUST be HSL.
 */
 
 @layer base {
   :root {
     /* BULL Brand Colors */
-    --bull-charcoal: 221 20% 7%;     /* #111317 - backgrounds/headers */
-    --bull-teal: 189 48% 31%;        /* #2A6F77 - accents/CTAs */
-    --bull-off-white: 216 29% 97%;   /* #F5F7FA - section backgrounds */
-    --bull-gray: 220 14% 46%;        /* #6B7280 - body text */
+    --bull-charcoal: 221 20% 7%;
+    /* #111317 - backgrounds/headers */
+    --bull-teal: 189 48% 31%;
+    /* #2A6F77 - accents/CTAs */
 
+    /* ↓ Antes: 216 29% 97%  (#F5F7FA). Bajamos luz y un pelín la saturación para reducir el “blanco nuclear”. */
+    --bull-off-white: 215 28% 95%;
+
+    --bull-gray: 220 14% 46%;
+    /* #6B7280 - body text */
+
+    /* Superficies base */
     --background: var(--bull-off-white);
     --foreground: var(--bull-charcoal);
 
-    --card: 0 0% 100%;
+    /* Cards ligeramente off-white (no blanco puro) para ganar profundidad */
+    /* ↓ Antes: 0 0% 100% */
+    --card: 0 0% 99%;
     --card-foreground: var(--bull-charcoal);
 
-    --popover: 0 0% 100%;
+    /* Popovers igual que cards */
+    --popover: 0 0% 99%;
     --popover-foreground: var(--bull-charcoal);
 
     --primary: var(--bull-teal);
@@ -29,39 +39,38 @@ All colors MUST be HSL.
     --secondary: var(--bull-off-white);
     --secondary-foreground: var(--bull-charcoal);
 
-    --muted: var(--bull-off-white);
+    /* Secciones suaves algo más marcadas que el background para evitar lienzo plano */
+    /* ↓ Antes: var(--bull-off-white) */
+    --muted: 215 24% 94%;
     --muted-foreground: var(--bull-gray);
 
-    --accent: 210 40% 96.1%;
+    --accent: 210 40% 96%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    /* Bordes un poco más visibles para estructura */
+    /* ↓ Antes: 214.3 31.8% 91.4% */
+    --border: 215 16% 86%;
+    --input: 215 16% 86%;
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
 
+    /* Sidebar (conservamos valores; ajusta si quieres más contraste ahí) */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
+    /* Mantenemos tu esquema oscuro tal cual */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -89,6 +98,7 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
