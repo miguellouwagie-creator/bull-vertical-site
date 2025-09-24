@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script type="application/ld+json" src="/schema/website.json"></script>
-    <script type="application/ld+json" src="/schema/business.json"></script>
-    <script type="application/ld+json" src="/schema/service.json"></script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -17,12 +14,13 @@
     />
     <link rel="canonical" href="https://bullverticalservice.com/" />
 
-    <!-- Performance -->
+    <!-- Performance: preload hero responsive -->
     <link
       rel="preload"
       as="image"
-      href="/hero/cover.webp"
-      imagesrcset="/hero/cover.webp"
+      href="/hero/cover-1920.webp"
+      imagesrcset="/hero/cover-768.webp 768w, /hero/cover-1280.webp 1280w, /hero/cover-1920.webp 1920w"
+      imagesizes="100vw"
     />
 
     <!-- DNS hints para WhatsApp -->
@@ -66,6 +64,105 @@
     <!-- UI/branding -->
     <meta name="theme-color" content="#0f172a" />
     <meta name="color-scheme" content="light only" />
+
+    <!-- Structured Data: inline con nonce compatible con CSP -->
+    <script type="application/ld+json" nonce="bullJsonLd">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://bullverticalservice.com/#website",
+        "url": "https://bullverticalservice.com/",
+        "name": "BULL Vertical Services",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "BULL Vertical Services",
+          "url": "https://bullverticalservice.com/"
+        },
+        "potentialAction": {
+          "@type": "ContactAction",
+          "target": "https://bullverticalservice.com/#contact",
+          "name": "Request a Quote"
+        }
+      }
+    </script>
+
+    <script type="application/ld+json" nonce="bullJsonLd">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://bullverticalservice.com/#localbusiness",
+        "url": "https://bullverticalservice.com/",
+        "name": "BULL Vertical Services",
+        "description": "IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured.",
+        "image": "https://bullverticalservice.com/og/social-card.png",
+        "telephone": "+1-786-613-0866",
+        "email": "bullverticalservice@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "515 N.W. 59th Ave., Ste. 519",
+          "addressLocality": "Miami",
+          "addressRegion": "FL",
+          "postalCode": "33126",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Miami" },
+          { "@type": "AdministrativeArea", "name": "Miami-Dade County" },
+          { "@type": "State", "name": "Florida" }
+        ],
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 25.777,
+          "longitude": -80.29
+        },
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "telephone": "+1-786-613-0866",
+            "email": "bullverticalservice@gmail.com",
+            "availableLanguage": ["en", "es"],
+            "areaServed": "US-FL"
+          }
+        ],
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=515%20N.W.%2059th%20Ave.%2C%20Ste.%20519%2C%20Miami%2C%20FL%2033126",
+        "sameAs": []
+      }
+    </script>
+
+    <script type="application/ld+json" nonce="bullJsonLd">
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "@id": "https://bullverticalservice.com/#service",
+        "serviceType": "Rope-access window & facade cleaning",
+        "provider": { "@id": "https://bullverticalservice.com/#localbusiness" },
+        "areaServed": { "@type": "City", "name": "Miami" },
+        "availableChannel": [
+          {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://bullverticalservice.com/#contact",
+            "name": "Online quote form"
+          },
+          {
+            "@type": "ServiceChannel",
+            "servicePhone": {
+              "@type": "ContactPoint",
+              "telephone": "+1-786-613-0866"
+            },
+            "name": "Phone"
+          },
+          {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://wa.me/34603428966",
+            "name": "WhatsApp"
+          }
+        ],
+        "termsOfService": "https://bullverticalservice.com/",
+        "isRelatedTo": { "@id": "https://bullverticalservice.com/#website" }
+      }
+    </script>
   </head>
 
   <body>

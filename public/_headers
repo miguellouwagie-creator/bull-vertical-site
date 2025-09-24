@@ -1,6 +1,6 @@
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://wa.me https://api.whatsapp.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; navigate-to 'self' https://wa.me https://api.whatsapp.com https://www.google.com https://mail.google.com https://accounts.google.com mailto:; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; script-src 'self' 'nonce-bullJsonLd'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://wa.me https://api.whatsapp.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; navigate-to 'self' https://wa.me https://api.whatsapp.com https://www.google.com https://mail.google.com https://accounts.google.com mailto:; upgrade-insecure-requests
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
   X-Content-Type-Options: nosniff
@@ -14,3 +14,10 @@
 
 /work/*
   Cache-Control: public, max-age=31536000, immutable
+
+  /hero/*
+    Cache-Control: public, max-age=31536000, immutable
+
+  /og/*
+    Cache-Control: public, max-age=31536000, immutable
+
