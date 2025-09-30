@@ -192,6 +192,18 @@ export const WorkGallery: React.FC = () => {
 
   // 📦 /public/work/  (sin categorías)
   const RAW_ITEMS: WorkItem[] = [
+    // 🔹 NUEVAS FOTOS DE PINTURA
+    { src: "/work/painting-1.jpg", title: "High-rise painting — rope access" },
+    {
+      src: "/work/painting-2.jpg",
+      title: "Façade painting — exterior elevation",
+    },
+    {
+      src: "/work/painting-3.jpg",
+      title: "Protective coatings — tower façade",
+    },
+
+    // Imágenes existentes
     { src: "/work/1.jpg", title: "Work 1" },
     { src: "/work/a2.jpg", title: "Work a2" },
     { src: "/work/b.jpg", title: "Work b" },
@@ -223,7 +235,7 @@ export const WorkGallery: React.FC = () => {
     { src: "/work/y.jpg", title: "Work y" },
     { src: "/work/z.jpg", title: "Work z" },
 
-    // Vídeos: si tienes póster estático (recomendado), déjalo en `poster`
+    // Vídeos (si los tienes con póster)
     {
       src: "/work/v1.mp4",
       title: "Video v1",

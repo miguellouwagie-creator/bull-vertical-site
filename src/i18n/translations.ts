@@ -97,6 +97,28 @@ export const translations = {
           ],
         },
         {
+          id: "high-rise-painting",
+          title: "High-Rise Painting",
+          description:
+            "Exterior painting and protective coatings for towers via rope access or swing stage",
+          benefits: [
+            "Rope access for difficult elevations",
+            "Coastal-grade protective coatings",
+            "HOA/GC scheduling & compliance",
+          ],
+        },
+        {
+          id: "regular-painting",
+          title: "Regular Painting",
+          description:
+            "Standard exterior painting for mid/low-rise buildings, podiums and amenity areas",
+          benefits: [
+            "Lift/boom or rope access as needed",
+            "Coastal-grade coatings",
+            "Protected work areas & resident communication",
+          ],
+        },
+        {
           id: "stain-removal",
           title: "Hard-Water Stain Removal",
           description:
@@ -406,6 +428,28 @@ export const translations = {
             "Resultados cristalinos sin marcas",
             "Acceso seguro a todos los niveles del edificio",
             "Mínimas interrupciones en la operativa",
+          ],
+        },
+        {
+          id: "high-rise-painting",
+          title: "Pintura en altura",
+          description:
+            "Pintura exterior y recubrimientos protectores en torres mediante acceso con cuerdas o andamio colgante",
+          benefits: [
+            "Acceso con cuerdas para elevaciones complejas",
+            "Recubrimientos de alta durabilidad en costa",
+            "Planificación con HOA/GC y cumplimiento",
+          ],
+        },
+        {
+          id: "regular-painting",
+          title: "Pintura convencional",
+          description:
+            "Pintura exterior estándar para edificios de baja/media altura, podios y zonas comunes",
+          benefits: [
+            "Plataformas elevadoras o cuerdas según acceso",
+            "Recubrimientos de larga duración",
+            "Áreas protegidas y comunicación a residentes",
           ],
         },
         {
