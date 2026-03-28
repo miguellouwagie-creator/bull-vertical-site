@@ -1,12 +1,8 @@
 /**
  * Cloudflare Turnstile widget — invisible/managed CAPTCHA.
  *
- * Usage:
- *   <Turnstile siteKey={VITE_TURNSTILE_SITE_KEY} onVerify={(token) => setToken(token)} />
- *
- * The widget script (challenges.cloudflare.com) is loaded once globally
- * via index.html. This component renders the target div and calls
- * window.turnstile.render() after mount.
+ * Fix #1: Memory leak — setTimeout retry loop is now properly cancelled
+ * on unmount via a `cancelled` flag + `clearTimeout`.
  *
  * Docs: https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/
  */
@@ -50,15 +46,20 @@ export function Turnstile({
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // FIX #1: cancelled flag + stored timeout id so the retry loop is
+    // fully stopped on unmount — no more dangling setTimeouts.
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
-    // Retry until the Turnstile script has loaded (async defer in index.html)
     const tryRender = () => {
+      if (cancelled) return;
       if (!window.turnstile) {
-        setTimeout(tryRender, 100);
+        timeoutId = setTimeout(tryRender, 100);
         return;
       }
-      widgetIdRef.current = window.turnstile.render(containerRef.current!, {
+      // Guard: container may already be removed if unmounted during the wait
+      if (!containerRef.current) return;
+      widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         theme,
         callback: onVerify,
@@ -66,13 +67,19 @@ export function Turnstile({
         "error-callback": onError,
       });
     };
+
     tryRender();
 
     return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
+        widgetIdRef.current = null;
       }
     };
+  // Callbacks intentionally excluded: changing them must not re-render the widget.
+  // Only siteKey changes warrant a full re-render.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteKey]);
 

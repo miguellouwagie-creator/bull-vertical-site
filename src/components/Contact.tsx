@@ -22,7 +22,6 @@ import { translations } from "@/i18n/translations";
 import { COMPANY } from "@/config/company";
 import { Turnstile } from "@/components/Turnstile";
 
-// All contact data comes from the single source of truth: src/config/company.ts
 const SUPPORT_EMAIL = COMPANY.email;
 const MAILTO_PLAIN = `mailto:${SUPPORT_EMAIL}`;
 const PHONE_E164 = COMPANY.phone;
@@ -30,12 +29,19 @@ const WA_PHONE_ES = COMPANY.waPhoneEs;
 const ADDRESS_TEXT = COMPANY.addressText;
 const MAPS_URL = COMPANY.mapsUrl;
 
-// Turnstile site key — public key, safe to expose in client code.
-// Get yours at: https://dash.cloudflare.com/ > Turnstile
-// Set VITE_TURNSTILE_SITE_KEY in .env.local (dev) and Cloudflare Pages env vars (prod).
+// Public site key — safe to expose in client code.
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
 
-/** Construye URL de Gmail compose */
+const EMPTY_FORM = {
+  name: "",
+  email: "",
+  phone: "",
+  building: "",
+  stories: "",
+  scope: "",
+  notes: "",
+};
+
 function buildGmailCompose(to: string, subject: string, body: string) {
   const base = "https://mail.google.com/mail/?view=cm&fs=1";
   const params = new URLSearchParams({ to, su: subject, body });
@@ -46,23 +52,15 @@ export const Contact = () => {
   const { lang } = useLang();
   const dict = (translations as any)[lang]?.contact ?? {};
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    building: "",
-    stories: "",
-    scope: "",
-    notes: "",
-  });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "bot">(
-    "idle",
-  );
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "bot">("idle");
   const [lastMailUrl, setLastMailUrl] = useState<string>("");
 
-  // Turnstile token — empty string means not yet verified
+  // FIX #5: Turnstile token state. turnstileKey forces a full widget remount
+  // after a successful send (which consumes the one-time token).
   const [turnstileToken, setTurnstileToken] = useState<string>("");
   const [turnstileExpired, setTurnstileExpired] = useState(false);
+  const [turnstileKey, setTurnstileKey] = useState(0);
 
   const handleInputChange = (field: string, value: string) =>
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -70,7 +68,6 @@ export const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If Turnstile is configured and token is missing/expired, block submission
     if (TURNSTILE_SITE_KEY) {
       if (!turnstileToken || turnstileExpired) {
         setStatus("bot");
@@ -80,9 +77,8 @@ export const Contact = () => {
 
     setStatus("sending");
 
-    const header = (lang || "").startsWith("es")
-      ? "Solicitud de presupuesto"
-      : "Quote request";
+    const isES = (lang || "").startsWith("es");
+    const header = isES ? "Solicitud de presupuesto" : "Quote request";
 
     const lines = [
       `${header}:`,
@@ -90,9 +86,9 @@ export const Contact = () => {
       `Email: ${formData.email}`,
       `Phone: ${formData.phone}`,
       `Building: ${formData.building}`,
-      `Floors/last cleaning: ${formData.stories || "—"}`,
-      `Scope: ${formData.scope || "—"}`,
-      `Notes: ${formData.notes || "—"}`,
+      `Floors/last cleaning: ${formData.stories || "\u2014"}`,
+      `Scope: ${formData.scope || "\u2014"}`,
+      `Notes: ${formData.notes || "\u2014"}`,
     ];
     const body = lines.join("\n");
     const gmailUrl = buildGmailCompose(SUPPORT_EMAIL, header, body);
@@ -101,6 +97,14 @@ export const Contact = () => {
       setLastMailUrl(gmailUrl);
       window.open(gmailUrl, "_blank", "noopener,noreferrer");
       setStatus("sent");
+
+      // FIX #5: Reset form + Turnstile widget after successful send.
+      // Incrementing turnstileKey forces the Turnstile component to fully
+      // remount, which re-renders a fresh widget and clears the used token.
+      setFormData(EMPTY_FORM);
+      setTurnstileToken("");
+      setTurnstileExpired(false);
+      setTurnstileKey((k) => k + 1);
     } catch {
       setStatus("error");
     }
@@ -108,7 +112,6 @@ export const Contact = () => {
 
   const isES = (lang || "").startsWith("es");
 
-  // Text helpers
   const title: string = dict.title ?? "Contact Us";
   const subtitle: string = dict.subtitle ?? "Ready to schedule your window cleaning service? Get in touch with us today.";
   const infoTitle: string = dict.infoTitle ?? "Contact Information";
@@ -140,7 +143,7 @@ export const Contact = () => {
   const waMsgShort =
     dict.whatsappMessage ??
     (isES
-      ? "Hola BULL, me gustaría un presupuesto para [Edificio] en Miami."
+      ? "Hola BULL, me gustar\u00eda un presupuesto para [Edificio] en Miami."
       : "Hello BULL, I would like a quote for [Building] in Miami.");
   const waHrefES = `https://wa.me/${WA_PHONE_ES}?text=${encodeURIComponent(waMsgShort)}`;
 
@@ -229,20 +232,19 @@ export const Contact = () => {
               <CardDescription>{requestDesc}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Status banners */}
               {status === "sent" && (
                 <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700 text-sm">
                   {isES ? (
                     <>
                       Hemos abierto <strong>Gmail</strong> con el mensaje prellenado a{" "}
-                      <strong>{SUPPORT_EMAIL}</strong>. Si no se abrió,{" "}
-                      <a className="underline" href={lastMailUrl}>haz clic aquí</a>.
-                      {" "}O llámanos al {phoneLabel}.
+                      <strong>{SUPPORT_EMAIL}</strong>. Si no se abri\u00f3,{" "}
+                      <a className="underline" href={lastMailUrl}>haz clic aqu\u00ed</a>.
+                      {" "}O ll\u00e1manos al {phoneLabel}.
                     </>
                   ) : (
                     <>
                       We opened <strong>Gmail</strong> with a prefilled message to{" "}
-                      <strong>{SUPPORT_EMAIL}</strong>. If it didn’t open,{" "}
+                      <strong>{SUPPORT_EMAIL}</strong>. If it didn\u2019t open,{" "}
                       <a className="underline" href={lastMailUrl}>click here</a>.
                       {" "}Or call us at {phoneLabel}.
                     </>
@@ -252,7 +254,7 @@ export const Contact = () => {
               {status === "error" && (
                 <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-red-700 text-sm">
                   {isES
-                    ? `Ocurrió un error al abrir Gmail. Escríbenos a ${SUPPORT_EMAIL} o llámanos.`
+                    ? `Ocurri\u00f3 un error al abrir Gmail. Escr\u00edbenos a ${SUPPORT_EMAIL} o ll\u00e1manos.`
                     : `There was an error opening Gmail. Email us at ${SUPPORT_EMAIL} or call us.`}
                 </div>
               )}
@@ -260,7 +262,7 @@ export const Contact = () => {
                 <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700 text-sm flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 shrink-0" />
                   {isES
-                    ? "Por favor, completa la verificación de seguridad antes de enviar."
+                    ? "Por favor, completa la verificaci\u00f3n de seguridad antes de enviar."
                     : "Please complete the security check before submitting."}
                 </div>
               )}
@@ -321,7 +323,7 @@ export const Contact = () => {
                   rows={4}
                 />
 
-                {/* Honeypot anti-spam (defence-in-depth alongside Turnstile) */}
+                {/* Honeypot anti-spam */}
                 <input
                   type="text"
                   name="company_website"
@@ -330,9 +332,11 @@ export const Contact = () => {
                   autoComplete="off"
                 />
 
-                {/* Cloudflare Turnstile widget — renders only when site key is set */}
+                {/* FIX #5: turnstileKey forces full remount after each send,
+                    ensuring the one-time token cannot be reused. */}
                 {TURNSTILE_SITE_KEY && (
                   <Turnstile
+                    key={turnstileKey}
                     siteKey={TURNSTILE_SITE_KEY}
                     theme="light"
                     onVerify={(token) => {
