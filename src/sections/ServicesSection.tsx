@@ -20,16 +20,15 @@ import {
   Check,
 } from "lucide-react";
 
-/** Iconos por id de servicio (usa un fallback si no hay match) */
 const iconById: Record<string, React.ReactNode> = {
-  "window-cleaning": <Sparkles className="h-5 w-5" />,
-  "stain-removal": <Sparkles className="h-5 w-5" />,
-  "sealant-cleaning": <ShieldCheck className="h-5 w-5" />,
-  "post-construction": <Sparkles className="h-5 w-5" />,
-  "maintenance-programs": <Wrench className="h-5 w-5" />,
-  "pressure-washing": <Droplets className="h-5 w-5" />,
-  "high-rise-painting": <Paintbrush className="h-5 w-5" />,
-  "regular-painting": <Paintbrush className="h-5 w-5" />,
+  "window-cleaning":      <Sparkles   className="h-5 w-5" />,
+  "stain-removal":        <Sparkles   className="h-5 w-5" />,
+  "sealant-cleaning":     <ShieldCheck className="h-5 w-5" />,
+  "post-construction":    <Sparkles   className="h-5 w-5" />,
+  "maintenance-programs": <Wrench     className="h-5 w-5" />,
+  "pressure-washing":     <Droplets   className="h-5 w-5" />,
+  "high-rise-painting":   <Paintbrush className="h-5 w-5" />,
+  "regular-painting":     <Paintbrush className="h-5 w-5" />,
 };
 
 export default function ServicesSection() {
@@ -42,7 +41,7 @@ export default function ServicesSection() {
     sv?.subtitle ??
     (lang === "es"
       ? "Soluciones completas de acceso con cuerdas para los rascacielos de Miami"
-      : "Complete rope-access solutions for Miami’s high-rise buildings");
+      : "Complete rope-access solutions for Miami\u2019s high-rise buildings");
   const selectedLabel =
     sv?.selectedLabel ??
     (lang === "es" ? "Servicios seleccionados:" : "Selected services:");
@@ -65,8 +64,8 @@ export default function ServicesSection() {
       s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
     );
 
-  const [open, setOpen] = React.useState<Record<string, boolean>>({}); // “More details” por card
-  const tMore = lang === "es" ? "Más detalles" : "More details";
+  const [open, setOpen] = React.useState<Record<string, boolean>>({});
+  const tMore = lang === "es" ? "M\u00e1s detalles" : "More details";
   const tLess = lang === "es" ? "Menos detalles" : "Less details";
 
   return (
@@ -81,7 +80,6 @@ export default function ServicesSection() {
           </p>
         </header>
 
-        {/* Tray de seleccionados */}
         {selected.length > 0 && (
           <div className="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-3 flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">{selectedLabel}</span>
@@ -103,16 +101,12 @@ export default function ServicesSection() {
           </div>
         )}
 
-        {/* Grid de servicios */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((s) => {
             const shown = s.benefits.slice(0, 3);
-            const rest = s.benefits.slice(3);
+            const rest  = s.benefits.slice(3);
             const expanded = !!open[s.id];
-            const Icon = iconById[s.id] ?? (
-              // Fallback genérico
-              <Building2 className="h-5 w-5" />
-            );
+            const Icon = iconById[s.id] ?? <Building2 className="h-5 w-5" />;
 
             return (
               <Card
@@ -129,7 +123,6 @@ export default function ServicesSection() {
                     </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg">{s.title}</CardTitle>
-                      {/* clamp en línea (por si no tienes el plugin de line-clamp) */}
                       <CardDescription
                         className="text-sm"
                         style={{
@@ -143,17 +136,12 @@ export default function ServicesSection() {
                       </CardDescription>
                     </div>
 
-                    {/* Botón select */}
                     <button
                       onClick={() => toggle(s.id)}
                       aria-label={
                         selected.includes(s.id)
-                          ? lang === "es"
-                            ? "Quitar"
-                            : "Deselect"
-                          : lang === "es"
-                            ? "Seleccionar"
-                            : "Select"
+                          ? lang === "es" ? "Quitar"      : "Deselect"
+                          : lang === "es" ? "Seleccionar" : "Select"
                       }
                       className={[
                         "ml-2 grid h-8 w-8 place-items-center rounded-full border",
@@ -170,15 +158,26 @@ export default function ServicesSection() {
 
                 <CardContent>
                   <ul className="space-y-1.5 text-sm">
-                    {shown.map((b, i) => (
-                      <li key={i} className="flex gap-2">
+                    {/*
+                     * FIX #11: keys changed from index (`i`) to stable content
+                     * (`b` — the benefit text itself).
+                     *
+                     * Why index keys are problematic here:
+                     * When the card expands (rest items revealed) React
+                     * reconciles by position, so it can incorrectly reuse DOM
+                     * nodes between the `shown` and `rest` sublists. Benefit
+                     * text is unique within a single service card, making it a
+                     * safe, stable key.
+                     */}
+                    {shown.map((b) => (
+                      <li key={b} className="flex gap-2">
                         <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-primary/40" />
                         <span className="text-foreground/90">{b}</span>
                       </li>
                     ))}
                     {expanded &&
-                      rest.map((b, i) => (
-                        <li key={`x-${i}`} className="flex gap-2">
+                      rest.map((b) => (
+                        <li key={b} className="flex gap-2">
                           <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-primary/25" />
                           <span className="text-foreground/90">{b}</span>
                         </li>
@@ -193,7 +192,9 @@ export default function ServicesSection() {
                       className="mt-3 inline-flex items-center gap-1 text-sm text-primary"
                     >
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`}
+                        className={`h-4 w-4 transition-transform ${
+                          expanded ? "rotate-180" : ""
+                        }`}
                       />
                       {expanded ? tLess : tMore}
                     </button>
