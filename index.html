@@ -65,8 +65,15 @@
     <meta name="theme-color" content="#0f172a" />
     <meta name="color-scheme" content="light only" />
 
-    <!-- Structured Data: inline con nonce compatible con CSP -->
-    <script type="application/ld+json" nonce="bullJsonLd">
+    <!--
+      Structured Data (LD+JSON).
+      NOTE: nonce attribute removed — script type="application/ld+json" is
+      data-only and NOT executed by the JS engine, so it is NOT subject to
+      script-src CSP directives. A static nonce here was both useless and
+      misleading. Real script-src protection is enforced via HTTP headers
+      in public/_headers (Cloudflare Pages).
+    -->
+    <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -87,7 +94,7 @@
       }
     </script>
 
-    <script type="application/ld+json" nonce="bullJsonLd">
+    <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
@@ -131,7 +138,7 @@
       }
     </script>
 
-    <script type="application/ld+json" nonce="bullJsonLd">
+    <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Service",
@@ -152,11 +159,6 @@
               "telephone": "+1-786-613-0866"
             },
             "name": "Phone"
-          },
-          {
-            "@type": "ServiceChannel",
-            "serviceUrl": "https://wa.me/34603428966",
-            "name": "WhatsApp"
           }
         ],
         "termsOfService": "https://bullverticalservice.com/",
