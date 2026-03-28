@@ -46,10 +46,15 @@ export function Turnstile({
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // FIX #1: cancelled flag + stored timeout id so the retry loop is
-    // fully stopped on unmount — no more dangling setTimeouts.
     let cancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout>;
+    /*
+     * TSC FIX: initialise as `undefined` so TypeScript knows the variable may
+     * not have been assigned when the cleanup runs synchronously (i.e. when
+     * window.turnstile was already available and setTimeout was never called).
+     * `clearTimeout(undefined)` is a no-op in browsers but the compiler cannot
+     * verify that without the explicit `| undefined` annotation.
+     */
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const tryRender = () => {
       if (cancelled) return;
@@ -57,7 +62,6 @@ export function Turnstile({
         timeoutId = setTimeout(tryRender, 100);
         return;
       }
-      // Guard: container may already be removed if unmounted during the wait
       if (!containerRef.current) return;
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
@@ -72,6 +76,7 @@ export function Turnstile({
 
     return () => {
       cancelled = true;
+      // Safe: clearTimeout(undefined) is a no-op; no TS2454 with the | undefined type.
       clearTimeout(timeoutId);
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
@@ -79,7 +84,6 @@ export function Turnstile({
       }
     };
   // Callbacks intentionally excluded: changing them must not re-render the widget.
-  // Only siteKey changes warrant a full re-render.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteKey]);
 
