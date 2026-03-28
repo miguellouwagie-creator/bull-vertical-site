@@ -1,14 +1,33 @@
 /**
  * Single source of truth for all company contact data.
- * Sensitive values (phone, email) are read from environment variables
- * so they are never hardcoded in the codebase.
  *
- * In development: create a `.env.local` file (see .env.example).
- * In production:  set variables in your hosting dashboard (Cloudflare Pages, etc.).
+ * Sensitive values (phone, email, WhatsApp) are read from Vite environment
+ * variables so they are NEVER hardcoded in the codebase.
+ *
+ * Development : copy .env.example → .env.local and fill real values.
+ * Production  : set variables in Cloudflare Pages dashboard
+ *               (Settings > Environment variables).
+ *
+ * Runtime guard: if a variable is missing at build time, the fallback
+ * empty string is returned so the UI degrades gracefully (link href=""
+ * rather than href="undefined") and the type stays `string` throughout.
  */
 
 /** Official street address — keep in sync with LD+JSON in index.html */
 export const ADDRESS_TEXT = "515 N.W. 59th Ave., Ste. 519, Miami, FL 33126";
+
+/** Read a VITE_ env variable; return empty string (not undefined) if absent. */
+function env(key: string): string {
+  const val = (import.meta.env as Record<string, string | undefined>)[key];
+  if (import.meta.env.DEV && !val) {
+    // Warn loudly in development so the developer knows what to configure.
+    console.warn(
+      `[company.ts] Missing env variable "${key}". ` +
+      `Create .env.local from .env.example and restart the dev server.`,
+    );
+  }
+  return val ?? "";
+}
 
 export const COMPANY = {
   name: "BULL Vertical Services LLC",
@@ -24,12 +43,12 @@ export const COMPANY = {
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(ADDRESS_TEXT),
 
-  /** E.164 phone number for tel: links */
-  phone: import.meta.env.VITE_PHONE_E164 as string,
+  /** E.164 phone number for tel: links — e.g. +17861234567 */
+  phone: env("VITE_PHONE_E164"),
 
   /** WhatsApp number (no '+') for wa.me links — Spanish market */
-  waPhoneEs: import.meta.env.VITE_WA_PHONE_ES as string,
+  waPhoneEs: env("VITE_WA_PHONE_ES"),
 
   /** Public contact email */
-  email: import.meta.env.VITE_CONTACT_EMAIL as string,
+  email: env("VITE_CONTACT_EMAIL"),
 };
