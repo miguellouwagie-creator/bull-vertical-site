@@ -19,20 +19,16 @@ import {
 import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { translations } from "@/i18n/translations";
+import { COMPANY } from "@/config/company";
 
-/** Dirección oficial + link a Maps */
-const ADDRESS_TEXT = "515 N.W. 59th Ave., Ste. 519, Miami, FL 33126";
-const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=" +
-  encodeURIComponent(ADDRESS_TEXT);
-
-/** Teléfonos */
-const PHONE_E164 = "+17866130866"; // tel: (USA)
-const WA_PHONE_ES = "34603428966"; // WhatsApp ES (sin '+') para wa.me
-
-/** Email de contacto (destinatario) */
-const SUPPORT_EMAIL = "bullverticalservice@gmail.com";
+// All contact data comes from the single source of truth: src/config/company.ts
+// which reads sensitive values (phone, email, WA number) from environment variables.
+const SUPPORT_EMAIL = COMPANY.email;
 const MAILTO_PLAIN = `mailto:${SUPPORT_EMAIL}`;
+const PHONE_E164 = COMPANY.phone;
+const WA_PHONE_ES = COMPANY.waPhoneEs;
+const ADDRESS_TEXT = COMPANY.addressText;
+const MAPS_URL = COMPANY.mapsUrl;
 
 /** Construye URL de Gmail compose */
 function buildGmailCompose(to: string, subject: string, body: string) {
@@ -86,7 +82,6 @@ export const Contact = () => {
     ];
     const body = lines.join("\n");
 
-    // Principal: abrir Gmail compose (web)
     const gmailUrl = buildGmailCompose(SUPPORT_EMAIL, header, body);
 
     try {
@@ -98,7 +93,6 @@ export const Contact = () => {
     }
   };
 
-  // Textos con fallback
   const title: string = dict.title ?? "Contact Us";
   const subtitle: string =
     dict.subtitle ??
@@ -106,7 +100,7 @@ export const Contact = () => {
   const infoTitle: string = dict.infoTitle ?? "Contact Information";
   const infoDesc: string =
     dict.infoDesc ?? "Contact us for quotes and inquiries";
-  const emailLabel: string = SUPPORT_EMAIL; // forzamos correo nuevo
+  const emailLabel: string = SUPPORT_EMAIL;
   const phoneLabel: string = dict.phoneLabel ?? "+1 (786) 613-0866";
   const coiNote: string = dict.coiNote ?? "COI, W-9, vendor onboarding ready.";
   const whatsappCta: string = dict.whatsappCta ?? "Chat on WhatsApp";
@@ -133,7 +127,6 @@ export const Contact = () => {
   };
   const submitCta: string = dict.cta ?? "Request Quote";
 
-  // WhatsApp CTA del panel info (ES)
   const waMsgShort =
     dict.whatsappMessage ??
     ((lang || "").startsWith("es")
@@ -187,7 +180,6 @@ export const Contact = () => {
                   </a>
                 </div>
 
-                {/* Dirección oficial con enlace a Google Maps */}
                 <div className="flex items-center gap-3">
                   <MapPin className="h-4 w-4 text-primary" />
                   <a
@@ -205,7 +197,6 @@ export const Contact = () => {
                     {coiNote}
                   </p>
 
-                  {/* ✅ Botón WhatsApp (ES) */}
                   <Button asChild className="w-full">
                     <a
                       href={waHrefES}
@@ -229,7 +220,6 @@ export const Contact = () => {
               <CardDescription>{requestDesc}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Estados */}
               {status === "sent" && (
                 <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700 text-sm">
                   {(lang || "").startsWith("es") ? (
@@ -245,7 +235,7 @@ export const Contact = () => {
                   ) : (
                     <>
                       We opened <strong>Gmail</strong> with a prefilled message
-                      to <strong>{SUPPORT_EMAIL}</strong>. If it didn’t open,{" "}
+                      to <strong>{SUPPORT_EMAIL}</strong>. If it didn't open,{" "}
                       <a className="underline" href={lastMailUrl}>
                         click here
                       </a>
@@ -257,8 +247,8 @@ export const Contact = () => {
               {status === "error" && (
                 <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-red-700 text-sm">
                   {(lang || "").startsWith("es")
-                    ? "Ocurrió un error al abrir Gmail. Escríbenos a bullverticalservice@gmail.com o llámanos."
-                    : "There was an error opening Gmail. You can email us at bullverticalservice@gmail.com or call us."}
+                    ? `Ocurrió un error al abrir Gmail. Escríbenos a ${SUPPORT_EMAIL} o llámanos.`
+                    : `There was an error opening Gmail. You can email us at ${SUPPORT_EMAIL} or call us.`}
                 </div>
               )}
 
