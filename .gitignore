@@ -1,8 +1,15 @@
 # Node
 node_modules/
 dist/
+
+# Env files — NEVER commit secrets
+.env
+.env.*
+!.env.example
+
 # Replit
 .replit
 replit.nix
+
 # SO
 .DS_Store
