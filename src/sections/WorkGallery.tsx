@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { translations } from "@/i18n/translations";
 import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
@@ -13,15 +13,12 @@ type WorkItem = {
 
 const PER_PAGE = 18;
 
-// FIX #3: Stable editorial order — no Math.random() in useMemo.
-// Shuffling with Math.random() breaks React StrictMode (double-invoke)
-// and would break SSR hydration. If you want variety, use a deterministic
-// seed or simply keep the editorial order defined here.
+// Stable editorial order — no Math.random() (fix #3 from previous commit).
 const RAW_ITEMS: WorkItem[] = [
   // Painting
-  { src: "/work/painting-1.jpg", title: "High-rise painting — rope access" },
-  { src: "/work/painting-2.jpg", title: "Fa\u00e7ade painting — exterior elevation" },
-  { src: "/work/painting-3.jpg", title: "Protective coatings — tower fa\u00e7ade" },
+  { src: "/work/painting-1.jpg", title: "High-rise painting \u2014 rope access" },
+  { src: "/work/painting-2.jpg", title: "Fa\u00e7ade painting \u2014 exterior elevation" },
+  { src: "/work/painting-3.jpg", title: "Protective coatings \u2014 tower fa\u00e7ade" },
   // Gallery
   { src: "/work/1.jpg",   title: "Work 1" },
   { src: "/work/a2.jpg",  title: "Work a2" },
@@ -58,8 +55,7 @@ const RAW_ITEMS: WorkItem[] = [
   { src: "/work/v2.mp4", title: "Video v2", type: "video", poster: "/work/v2-poster.jpg" },
 ];
 
-// FIX #2: probeImage with AbortController so HTTP requests are cancelled
-// when the parent component unmounts or the src changes.
+// probeImage with AbortController (fix #2 from previous commit).
 function probeImage(url: string, signal: AbortSignal): Promise<boolean> {
   return new Promise((res) => {
     if (signal.aborted) { res(false); return; }
@@ -94,11 +90,8 @@ async function findPoster(
   return null;
 }
 
-// FIX #2 + #4: VideoThumb
-// - probeImage now accepts AbortSignal so requests cancel on unmount
-// - preload changed from "auto" to "metadata" to avoid downloading full
-//   video content just for a thumbnail (was potentially MBs per video)
-// - play/pause trick kept but guarded with proper AbortError check
+// VideoThumb — thumbnail card component.
+// preload="metadata" (fix #4 from previous commit).
 const VideoThumb: React.FC<{
   src: string;
   poster?: string;
@@ -110,7 +103,6 @@ const VideoThumb: React.FC<{
   const vidRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    // FIX #2: AbortController cancels all pending probeImage requests on unmount
     const controller = new AbortController();
     findPoster(src, poster, controller.signal).then((p) => {
       if (!controller.signal.aborted) setPosterUrl(p);
@@ -136,8 +128,6 @@ const VideoThumb: React.FC<{
     <video
       ref={vidRef}
       src={src}
-      // FIX #4: "metadata" only downloads duration/dimensions, not the full file.
-      // "auto" was downloading entire videos just to show thumbnails.
       preload="metadata"
       muted
       playsInline
@@ -166,13 +156,10 @@ const VideoThumb: React.FC<{
       }}
       onLoadedData={async (e) => {
         const v = e.currentTarget;
-        // FIX #4: guard against AbortError before calling pause().
-        // Some browsers throw AbortError if play() is interrupted.
         try {
           await v.play();
           v.pause();
         } catch (err) {
-          // Only swallow AbortError/NotAllowedError — rethrow anything else.
           const name = (err as DOMException)?.name;
           if (name !== "AbortError" && name !== "NotAllowedError") throw err;
         }
@@ -215,12 +202,10 @@ export const WorkGallery: React.FC = () => {
         : (n: number) => `${n} items loaded.`,
   };
 
-  // FIX #3: removed useMemo + shuffleOnce — editorial order is deterministic.
   const [visible, setVisible] = useState(PER_PAGE);
   const [openAt, setOpenAt] = useState<number | null>(null);
   const liveRegionRef = useRef<HTMLParagraphElement>(null);
 
-  // FIX #3: slice directly from the stable module-level constant.
   const visibleItems = RAW_ITEMS.slice(0, visible);
   const canLoadMore = visible < RAW_ITEMS.length;
 
@@ -268,7 +253,6 @@ export const WorkGallery: React.FC = () => {
         <div className="columns-2 sm:columns-3 lg:columns-5 xl:columns-6 gap-4 [column-fill:_balance]">
           {visibleItems.map((item, idx) => (
             <button
-              // FIX #3: key is the stable src — no idx suffix that shifts on re-render
               key={item.src}
               onClick={() => setOpenAt(idx)}
               className={[
@@ -361,12 +345,28 @@ export const WorkGallery: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             {visibleItems[openAt].type === "video" ? (
+              /*
+               * FIX #10: preload="none" on the lightbox video.
+               *
+               * Without an explicit preload attribute, browsers default to
+               * "auto" (Chrome/Edge) or "metadata" (Firefox/Safari), which
+               * triggers an immediate network request for video data the
+               * moment the lightbox opens — before the user presses play.
+               *
+               * preload="none" defers ALL network activity until the user
+               * explicitly interacts with the controls. The video will still
+               * play normally; it just won't pre-buffer data unnecessarily.
+               *
+               * controls={true} is intentional here: the lightbox is a
+               * deliberate viewing experience (unlike the thumbnail card).
+               */
               <video
                 id="bv-lightbox-video"
                 src={visibleItems[openAt].src}
                 controls
                 playsInline
                 muted
+                preload="none"
                 className="max-h-[85vh] w-auto h-auto mx-auto rounded-lg"
               />
             ) : (
