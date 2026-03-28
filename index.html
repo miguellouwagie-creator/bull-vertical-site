@@ -23,42 +23,29 @@
       imagesizes="100vw"
     />
 
-    <!-- DNS hints para WhatsApp -->
+    <!-- DNS hints -->
     <link rel="dns-prefetch" href="https://wa.me" />
     <link rel="dns-prefetch" href="https://api.whatsapp.com" />
+    <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
     <link rel="preconnect" href="https://wa.me" crossorigin />
     <link rel="preconnect" href="https://api.whatsapp.com" crossorigin />
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:site_name" content="BULL Vertical Services" />
     <meta property="og:url" content="https://bullverticalservice.com/" />
-    <meta
-      property="og:title"
-      content="Rope access cleaning in Miami — BULL Vertical Services"
-    />
-    <meta
-      property="og:description"
-      content="IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured."
-    />
+    <meta property="og:title" content="Rope access cleaning in Miami — BULL Vertical Services" />
+    <meta property="og:description" content="IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured." />
     <meta property="og:image" content="/og/social-card.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="BULL Vertical Services — Rope access cleaning in Miami"
-    />
+    <meta property="og:image:alt" content="BULL Vertical Services — Rope access cleaning in Miami" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Rope access cleaning in Miami — BULL Vertical Services"
-    />
-    <meta
-      name="twitter:description"
-      content="IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured."
-    />
+    <meta name="twitter:title" content="Rope access cleaning in Miami — BULL Vertical Services" />
+    <meta name="twitter:description" content="IRATA rope-access window & facade cleaning for residential and commercial towers in Miami. 24–48h quote. Fully insured." />
     <meta name="twitter:image" content="/og/social-card.png" />
 
     <!-- UI/branding -->
@@ -66,13 +53,17 @@
     <meta name="color-scheme" content="light only" />
 
     <!--
-      Structured Data (LD+JSON).
-      NOTE: nonce attribute removed — script type="application/ld+json" is
-      data-only and NOT executed by the JS engine, so it is NOT subject to
-      script-src CSP directives. A static nonce here was both useless and
-      misleading. Real script-src protection is enforced via HTTP headers
-      in public/_headers (Cloudflare Pages).
+      Cloudflare Turnstile SDK.
+      Loaded with defer so it never blocks rendering.
+      CSP: script-src must include https://challenges.cloudflare.com
+           (see public/_headers).
     -->
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      defer
+    ></script>
+
+    <!-- Structured Data (LD+JSON) — data only, not executed as JS -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",

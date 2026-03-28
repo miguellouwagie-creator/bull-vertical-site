@@ -16,13 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin, ShieldCheck } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { translations } from "@/i18n/translations";
 import { COMPANY } from "@/config/company";
+import { Turnstile } from "@/components/Turnstile";
 
 // All contact data comes from the single source of truth: src/config/company.ts
-// which reads sensitive values (phone, email, WA number) from environment variables.
 const SUPPORT_EMAIL = COMPANY.email;
 const MAILTO_PLAIN = `mailto:${SUPPORT_EMAIL}`;
 const PHONE_E164 = COMPANY.phone;
@@ -30,14 +30,15 @@ const WA_PHONE_ES = COMPANY.waPhoneEs;
 const ADDRESS_TEXT = COMPANY.addressText;
 const MAPS_URL = COMPANY.mapsUrl;
 
+// Turnstile site key — public key, safe to expose in client code.
+// Get yours at: https://dash.cloudflare.com/ > Turnstile
+// Set VITE_TURNSTILE_SITE_KEY in .env.local (dev) and Cloudflare Pages env vars (prod).
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+
 /** Construye URL de Gmail compose */
 function buildGmailCompose(to: string, subject: string, body: string) {
   const base = "https://mail.google.com/mail/?view=cm&fs=1";
-  const params = new URLSearchParams({
-    to,
-    su: subject,
-    body,
-  });
+  const params = new URLSearchParams({ to, su: subject, body });
   return `${base}&${params.toString()}`;
 }
 
@@ -54,16 +55,29 @@ export const Contact = () => {
     scope: "",
     notes: "",
   });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "bot">(
     "idle",
   );
   const [lastMailUrl, setLastMailUrl] = useState<string>("");
+
+  // Turnstile token — empty string means not yet verified
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const [turnstileExpired, setTurnstileExpired] = useState(false);
 
   const handleInputChange = (field: string, value: string) =>
     setFormData((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // If Turnstile is configured and token is missing/expired, block submission
+    if (TURNSTILE_SITE_KEY) {
+      if (!turnstileToken || turnstileExpired) {
+        setStatus("bot");
+        return;
+      }
+    }
+
     setStatus("sending");
 
     const header = (lang || "").startsWith("es")
@@ -81,7 +95,6 @@ export const Contact = () => {
       `Notes: ${formData.notes || "—"}`,
     ];
     const body = lines.join("\n");
-
     const gmailUrl = buildGmailCompose(SUPPORT_EMAIL, header, body);
 
     try {
@@ -93,21 +106,19 @@ export const Contact = () => {
     }
   };
 
+  const isES = (lang || "").startsWith("es");
+
+  // Text helpers
   const title: string = dict.title ?? "Contact Us";
-  const subtitle: string =
-    dict.subtitle ??
-    "Ready to schedule your window cleaning service? Get in touch with us today.";
+  const subtitle: string = dict.subtitle ?? "Ready to schedule your window cleaning service? Get in touch with us today.";
   const infoTitle: string = dict.infoTitle ?? "Contact Information";
-  const infoDesc: string =
-    dict.infoDesc ?? "Contact us for quotes and inquiries";
+  const infoDesc: string = dict.infoDesc ?? "Contact us for quotes and inquiries";
   const emailLabel: string = SUPPORT_EMAIL;
   const phoneLabel: string = dict.phoneLabel ?? "+1 (786) 613-0866";
   const coiNote: string = dict.coiNote ?? "COI, W-9, vendor onboarding ready.";
   const whatsappCta: string = dict.whatsappCta ?? "Chat on WhatsApp";
   const requestTitle: string = dict.requestTitle ?? "Request a Quote";
-  const requestDesc: string =
-    dict.requestDesc ??
-    "Complete the form below and we'll get back to you within 24 hours";
+  const requestDesc: string = dict.requestDesc ?? "Complete the form below and we\u2019ll get back to you within 24 hours";
   const labels = {
     name: dict.labels?.name ?? "Full name",
     email: dict.labels?.email ?? "Email address",
@@ -116,8 +127,7 @@ export const Contact = () => {
     stories: dict.labels?.stories ?? "Floors / last cleaning date",
     notes: dict.labels?.notes ?? "Notes / preferred schedule",
   };
-  const selectPlaceholder: string =
-    dict.select?.placeholder ?? "Select service";
+  const selectPlaceholder: string = dict.select?.placeholder ?? "Select service";
   const selectOptions = {
     exterior: dict.select?.options?.exterior ?? "Exterior",
     interior: dict.select?.options?.interior ?? "Interior",
@@ -129,12 +139,14 @@ export const Contact = () => {
 
   const waMsgShort =
     dict.whatsappMessage ??
-    ((lang || "").startsWith("es")
+    (isES
       ? "Hola BULL, me gustaría un presupuesto para [Edificio] en Miami."
       : "Hello BULL, I would like a quote for [Building] in Miami.");
-  const waHrefES = `https://wa.me/${WA_PHONE_ES}?text=${encodeURIComponent(
-    waMsgShort,
-  )}`;
+  const waHrefES = `https://wa.me/${WA_PHONE_ES}?text=${encodeURIComponent(waMsgShort)}`;
+
+  const submitDisabled =
+    status === "sending" ||
+    (!!TURNSTILE_SITE_KEY && (!turnstileToken || turnstileExpired));
 
   return (
     <section id="contact" className="py-20 bg-muted">
@@ -193,10 +205,7 @@ export const Contact = () => {
                 </div>
 
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {coiNote}
-                  </p>
-
+                  <p className="text-sm text-muted-foreground mb-4">{coiNote}</p>
                   <Button asChild className="w-full">
                     <a
                       href={waHrefES}
@@ -220,35 +229,39 @@ export const Contact = () => {
               <CardDescription>{requestDesc}</CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Status banners */}
               {status === "sent" && (
                 <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700 text-sm">
-                  {(lang || "").startsWith("es") ? (
+                  {isES ? (
                     <>
-                      Hemos abierto <strong>Gmail</strong> con el mensaje
-                      prellenado a <strong>{SUPPORT_EMAIL}</strong>. Si no se
-                      abrió,{" "}
-                      <a className="underline" href={lastMailUrl}>
-                        haz clic aquí
-                      </a>
-                      . O llámanos al {phoneLabel}.
+                      Hemos abierto <strong>Gmail</strong> con el mensaje prellenado a{" "}
+                      <strong>{SUPPORT_EMAIL}</strong>. Si no se abrió,{" "}
+                      <a className="underline" href={lastMailUrl}>haz clic aquí</a>.
+                      {" "}O llámanos al {phoneLabel}.
                     </>
                   ) : (
                     <>
-                      We opened <strong>Gmail</strong> with a prefilled message
-                      to <strong>{SUPPORT_EMAIL}</strong>. If it didn't open,{" "}
-                      <a className="underline" href={lastMailUrl}>
-                        click here
-                      </a>
-                      . Or call us at {phoneLabel}.
+                      We opened <strong>Gmail</strong> with a prefilled message to{" "}
+                      <strong>{SUPPORT_EMAIL}</strong>. If it didn’t open,{" "}
+                      <a className="underline" href={lastMailUrl}>click here</a>.
+                      {" "}Or call us at {phoneLabel}.
                     </>
                   )}
                 </div>
               )}
               {status === "error" && (
                 <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-red-700 text-sm">
-                  {(lang || "").startsWith("es")
+                  {isES
                     ? `Ocurrió un error al abrir Gmail. Escríbenos a ${SUPPORT_EMAIL} o llámanos.`
-                    : `There was an error opening Gmail. You can email us at ${SUPPORT_EMAIL} or call us.`}
+                    : `There was an error opening Gmail. Email us at ${SUPPORT_EMAIL} or call us.`}
+                </div>
+              )}
+              {status === "bot" && (
+                <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700 text-sm flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 shrink-0" />
+                  {isES
+                    ? "Por favor, completa la verificación de seguridad antes de enviar."
+                    : "Please complete the security check before submitting."}
                 </div>
               )}
 
@@ -276,9 +289,7 @@ export const Contact = () => {
                 <Input
                   placeholder={labels.building}
                   value={formData.building}
-                  onChange={(e) =>
-                    handleInputChange("building", e.target.value)
-                  }
+                  onChange={(e) => handleInputChange("building", e.target.value)}
                   required
                 />
                 <Input
@@ -295,21 +306,11 @@ export const Contact = () => {
                     <SelectValue placeholder={selectPlaceholder} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="exterior">
-                      {selectOptions.exterior}
-                    </SelectItem>
-                    <SelectItem value="interior">
-                      {selectOptions.interior}
-                    </SelectItem>
-                    <SelectItem value="post-construction">
-                      {selectOptions.post}
-                    </SelectItem>
-                    <SelectItem value="hard-water-removal">
-                      {selectOptions.hard}
-                    </SelectItem>
-                    <SelectItem value="pressure-washing">
-                      {selectOptions.pressure}
-                    </SelectItem>
+                    <SelectItem value="exterior">{selectOptions.exterior}</SelectItem>
+                    <SelectItem value="interior">{selectOptions.interior}</SelectItem>
+                    <SelectItem value="post-construction">{selectOptions.post}</SelectItem>
+                    <SelectItem value="hard-water-removal">{selectOptions.hard}</SelectItem>
+                    <SelectItem value="pressure-washing">{selectOptions.pressure}</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -320,7 +321,7 @@ export const Contact = () => {
                   rows={4}
                 />
 
-                {/* Honeypot anti-spam */}
+                {/* Honeypot anti-spam (defence-in-depth alongside Turnstile) */}
                 <input
                   type="text"
                   name="company_website"
@@ -329,15 +330,34 @@ export const Contact = () => {
                   autoComplete="off"
                 />
 
+                {/* Cloudflare Turnstile widget — renders only when site key is set */}
+                {TURNSTILE_SITE_KEY && (
+                  <Turnstile
+                    siteKey={TURNSTILE_SITE_KEY}
+                    theme="light"
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                      setTurnstileExpired(false);
+                      if (status === "bot") setStatus("idle");
+                    }}
+                    onExpire={() => {
+                      setTurnstileToken("");
+                      setTurnstileExpired(true);
+                    }}
+                    onError={() => {
+                      setTurnstileToken("");
+                      setTurnstileExpired(true);
+                    }}
+                  />
+                )}
+
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={status === "sending"}
+                  disabled={submitDisabled}
                 >
                   {status === "sending"
-                    ? (lang || "").startsWith("es")
-                      ? "Enviando..."
-                      : "Sending..."
+                    ? isES ? "Enviando..." : "Sending..."
                     : submitCta}
                 </Button>
               </form>
