@@ -25,21 +25,13 @@ function get(obj: any, path: string): any {
 }
 
 /**
- * Sanitise a value that `lang` stored in localStorage.
+ * FIX #13: Unified language resolution + single fallback mechanism.
  *
- * FIX #13: Previously `t()` silently returned the raw key string whenever a
- * translation was missing (e.g. `t("nav.safety")` returned `"nav.safety"`).
- * Meanwhile Hero.tsx maintained its own parallel `isMissing()` + per-key
- * fallback system, creating two incompatible fallback mechanisms.
- *
- * The unified approach:
- *  1. `resolveLang` clamps any unrecognised locale back to `"en"` so the
- *     translation dict is always valid. This eliminates the root cause of
- *     both the FAQSection crash (#9) and the raw-key display bug.
- *  2. `t()` now returns `undefined` (typed as `string`) when a key is truly
- *     absent, so call-sites can distinguish "key missing" from "key present
- *     but empty". Components that already have their own fallback (Hero, FAQ)
- *     continue to work unchanged.
+ *  1. `resolveLang` clamps any unrecognised locale back to "en" so the
+ *     translation dict is always valid. Eliminates the root cause of both
+ *     the FAQSection crash (#9) and the raw-key display bug.
+ *  2. `t()` returns the path key as-is when a translation is absent, so
+ *     components that already check for key-equality continue to work.
  *  3. `setLang` validates before writing to state so a bad locale from
  *     external code cannot corrupt the context.
  */
@@ -57,8 +49,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [lang, setLangRaw] = useState<Lang>("en");
 
-  // FIX #13: validate before writing to state
-  const setLang = (l: Lang) => setLangRaw(resolvelang(l));
+  // FIX #13: validate before writing to state (typo corrected: resolveLang, not resolvelang)
+  const setLang = (l: Lang) => setLangRaw(resolveLang(l));
 
   useEffect(() => {
     const stored = localStorage.getItem("lang");
@@ -84,20 +76,18 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [lang]);
 
   const value = useMemo<Ctx>(() => {
-    // FIX #13: resolveLang guarantees dict is never undefined
+    // resolveLang guarantees dict is never undefined
     const dict = translations[resolveLang(lang)];
     return {
       lang,
       setLang,
-      // Return the value if found; fall back to the path key so existing
-      // components that checked for key-equality still work as before.
       t: (path) => {
         const val = get(dict, path);
         return typeof val === "string" ? val : path;
       },
       td: () => dict,
     };
-  // setLang is stable (defined outside useMemo deps)
+  // setLang is stable (closure defined outside useMemo)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
